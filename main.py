@@ -7,11 +7,11 @@ args = sys.argv[1:]
 if len(args) > 0:
     MAX_DEPLOYMENTS = int(args[0])
 elif "MAX_DEPLOYMENTS" in os.environ:
-    MAX_DEPLOYMENTS = os.environ["MAX_DEPLOYMENTS"]
+    MAX_DEPLOYMENTS = int(os.environ["MAX_DEPLOYMENTS"])
 else:
     MAX_DEPLOYMENTS = 5
 
-BUCKET_NAME = "s3-bucket-name"
+BUCKET_NAME = os.environ["BUCKET_NAME"] if "BUCKET_NAME" in os.environ else "s3-bucket-name"
 ENDPOINT_URL = os.environ["ENDPOINT_URL"] if "ENDPOINT_URL" in os.environ else "http://localhost:4566"
 
 # Returns an anonymous function for retrieving the LastModified key in the S3 objects list.
@@ -41,7 +41,7 @@ def main():
                 # https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3/client/delete_objects.html
                 keys_to_remove.append({"Key": obj["Key"]})
     
-    print("Deleting following keys:")
+    print(f"Keeping the most recent {MAX_DEPLOYMENTS} deploys. Deleting following keys:")
     print(keys_to_remove)
     if keys_to_remove:
         client.delete_objects(

@@ -4,7 +4,7 @@ import random
 import uuid
 from time import sleep
 
-BUCKET_NAME = "s3-bucket-name"
+BUCKET_NAME = os.environ["BUCKET_NAME"] if "BUCKET_NAME" in os.environ else "s3-bucket-name"
 ENDPOINT_URL = os.environ["ENDPOINT_URL"] if "ENDPOINT_URL" in os.environ else "http://localhost:4566"
 
 def main():
@@ -19,7 +19,7 @@ def main():
         k = uuid.uuid4().hex[:8]
         client.put_object(Bucket=BUCKET_NAME, Key=f"{k}/index.html")
         client.put_object(Bucket=BUCKET_NAME, Key=f"{k}/css/font.css")
-        client.put_object(Bucket=BUCKET_NAME, Key=f"{k}/images/hey.png ")
+        client.put_object(Bucket=BUCKET_NAME, Key=f"{k}/images/hey.png")
 
     # List the objects we've created 
     results = client.list_objects_v2(Bucket=BUCKET_NAME)["Contents"]
