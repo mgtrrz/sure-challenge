@@ -8,7 +8,7 @@ services:
       - 4510-4559:4510-4559
     environment:
       - SERVICES=s3
-  app:
+  init:
     build: .
     environment:
     - AWS_DEFAULT_REGION=us-east-1
@@ -16,3 +16,16 @@ services:
     - AWS_SECRET_ACCESS_KEY=foobar
     depends_on:
       - localstack
+    restart: "no"
+    entrypoint: ["python3", "init.py"]
+  # main:
+  #   build: .
+  #   environment:
+  #   - AWS_DEFAULT_REGION=us-east-1
+  #   - AWS_ACCESS_KEY_ID=foobar
+  #   - AWS_SECRET_ACCESS_KEY=foobar
+  #   - DOCKER_COMPOSE="1"
+  #   - ENDPOINT_URL="http://localstack:4566"
+  #   depends_on:
+  #     - localstack
+  #     - init
