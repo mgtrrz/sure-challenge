@@ -1,12 +1,11 @@
 import boto3
 import os
 import sys
-from time import sleep
 
-# Check for how many recent deployments to keep
 args = sys.argv[1:]
+# Check for how many recent deployments to keep
 if len(args) > 0:
-    MAX_DEPLOYMENTS = args[0]
+    MAX_DEPLOYMENTS = int(args[0])
 elif "MAX_DEPLOYMENTS" in os.environ:
     MAX_DEPLOYMENTS = os.environ["MAX_DEPLOYMENTS"]
 else:
@@ -19,25 +18,37 @@ ENDPOINT_URL = os.environ["ENDPOINT_URL"] if "ENDPOINT_URL" in os.environ else "
 get_last_modified = lambda obj: obj["LastModified"]
 
 def main():
-    # The actual script wouldn't have this but if this container runs with the init script, we need to wait for the init script to finish creating objects.
-    if "DOCKER_COMPOSE" in os.environ: sleep(20)
-
     client = boto3.client("s3", endpoint_url=ENDPOINT_URL)
     results = client.list_objects_v2(Bucket=BUCKET_NAME)["Contents"]
 
     # Reverse sort by most recent objects in our bucket
-    results_sorted = [obj["Key"] for obj in sorted(results, key=get_last_modified, reverse=True)]
+    results_sorted = [obj for obj in sorted(results, key=get_last_modified, reverse=True)]
 
-    # Just get the random hash string dir
-    sorted_keys = set([obj.split("/")[0] for obj in results_sorted])
-    print(sorted_keys)
+    print(f"Current objects:")
+    for obj in results_sorted:
+        print(f"{obj['Key']}\t{obj['LastModified'].isoformat()}")
 
-    # We'll use the random hash string directory as the key to determine which ones to remove
-    # results_sorted[5:]
+    # Just get the directory name and remove duplicates, preserving the list order
+    sorted_keys = list(dict.fromkeys([obj["Key"].split("/")[0] for obj in results_sorted]))
 
-    # print(f"Older than {MAX_DEPLOYMENTS} deleted:")
-    # for obj in results_sorted:
-    #     print(f"{obj['Key']} {obj['LastModified'].isoformat()}")
+    # Make a list of the deployment "directories" that exceed MAX_DEPLOYMENTS and 
+    # make an object of keys to delete
+    keys_to_remove = list()
+    for key in sorted_keys[MAX_DEPLOYMENTS:]:
+        for obj in results_sorted:
+            if obj["Key"].startswith(f"{key}/"):
+                # Create a dict inside the list to match the request syntax
+                # https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3/client/delete_objects.html
+                keys_to_remove.append({"Key": obj["Key"]})
+    
+    print("Deleting following keys:")
+    print(keys_to_remove)
+    if keys_to_remove:
+        client.delete_objects(
+            Bucket=BUCKET_NAME,
+            Delete={"Objects": keys_to_remove}
+        )
+
 
 if __name__ == '__main__':
     main()
