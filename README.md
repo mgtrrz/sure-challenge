@@ -19,13 +19,15 @@ python3 main.py 8
 
 Otherwise, it assumes the most recent 5. The scripts also take in environment variables assuming it wil run in a container. An ideal location for this script to run may be in a serverless setting.
 
-Add new items with:
+If you have [awslocal installed](https://docs.localstack.cloud/user-guide/integrations/aws-cli/#localstack-aws-cli-awslocal), add new items with:
 
 ```
 hash=$(openssl rand -base64 8 | tr -dc A-Za-z0-9); awslocal s3api put-object --bucket s3-bucket-name --key "${hash}/index.html"; awslocal s3api put-object --bucket s3-bucket-name --key "${hash}/style.css"
 ```
 
-And re-run the main.py script to see it deleting older items.
+Alternatively, you can re-run the init script locally `python3 init.py`.
+
+If you re-run the main.py script, you'll see it deleting older items, keeping the most recent 5 deployments.
 
 ## Assumptions
 

@@ -1,6 +1,7 @@
 import boto3
-import uuid
+import os
 import random
+import uuid
 from time import sleep
 
 BUCKET_NAME = "s3-bucket-name"
