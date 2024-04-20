@@ -29,9 +29,13 @@ Alternatively, you can re-run the init script locally `python3 init.py`.
 
 If you re-run the main.py script, you'll see it deleting older items, keeping the most recent 5 deployments.
 
+Point it to a real bucket by exporting environment variables `BUCKET_NAME` and `ENDPOINT_URL`.
+
 ## Assumptions
 
+- This script assumes the name of the bucket is "s3-bucket-name". You can change the name of the bucket by setting the environment variable `BUCKET_NAME`.
+- This script assumes that we're talking to and authenticating with localstack. This script may either be adapted to remove these assumptions and use the default endpoint or you can set environment variable `ENDPOINT_URL` to point to AWS' S3 API, such as `https://s3.us-east-1.amazonaws.com`.
 - This script assumes that the deployments go by the last modified date of the objects and that these objects won't be modified after they've been uploaded to S3.
-- This script also assumes that the deployment name (the hash) does not contain any symbols.
-- This script assumes that conditions are perfect and does not do any proper error handling, such as checking to see if the bucket exists or is accessible. Before a production deploy, we'd want to add more error handling.
+- This script also assumes that the deployment name (the hash) does not contain any symbols such as `/`.
+- This script assumes that conditions are ideal and does not do any proper error handling, such as checking to see if the bucket exists or is accessible. Before deploying this to production, we'd want to add more error handling.
 - This script assumes that each deployment only has a few files and does not properly paginate items. If this were in production, we'd properly want to make sure we paginate all the items in a bucket in case it exceeds the default limit that `list_objects_v2` returns.
