@@ -10,5 +10,9 @@ services:
       - SERVICES=s3
   app:
     build: .
+    environment:
+    - AWS_DEFAULT_REGION=us-east-1
+    - AWS_ACCESS_KEY_ID=foobar
+    - AWS_SECRET_ACCESS_KEY=foobar
     depends_on:
       - localstack
