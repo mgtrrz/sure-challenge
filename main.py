@@ -21,7 +21,7 @@ def main():
     client = boto3.client("s3", endpoint_url=ENDPOINT_URL)
     results = client.list_objects_v2(Bucket=BUCKET_NAME)["Contents"]
 
-    # Reverse sort by most recent objects in our bucket
+    # Reverse sort by most recent objects (order by LastModified datetime object) in our bucket
     results_sorted = [obj for obj in sorted(results, key=get_last_modified, reverse=True)]
 
     print(f"Current objects:")
