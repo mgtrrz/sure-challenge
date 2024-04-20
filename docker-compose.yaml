@@ -18,14 +18,3 @@ services:
       - localstack
     restart: "no"
     entrypoint: ["python3", "init.py"]
-  # main:
-  #   build: .
-  #   environment:
-  #   - AWS_DEFAULT_REGION=us-east-1
-  #   - AWS_ACCESS_KEY_ID=foobar
-  #   - AWS_SECRET_ACCESS_KEY=foobar
-  #   - DOCKER_COMPOSE="1"
-  #   - ENDPOINT_URL="http://localstack:4566"
-  #   depends_on:
-  #     - localstack
-  #     - init

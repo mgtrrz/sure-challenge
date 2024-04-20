@@ -22,4 +22,5 @@ Otherwise, it assumes the most recent 5. The scripts also take in environment va
 ## Assumptions
 
 - This script assumes that the deployments go by the last modified date of the objects and that these objects won't be modified after they've been uploaded to S3.
-- This script does not do any proper error handling, such as checking to see if the bucket exists or is accessible. Before a production deploy, we'd want to add more error handling.
+- This script assumes that conditions are perfect and does not do any proper error handling, such as checking to see if the bucket exists or is accessible. Before a production deploy, we'd want to add more error handling.
+- This script assumes that each deployment only has a few files and does not properly paginate items. If this were in production, we'd properly want to make sure we paginate all the items in a bucket in case it exceeds the default limit that `list_objects_v2` returns.
