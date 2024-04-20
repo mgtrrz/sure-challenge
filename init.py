@@ -22,7 +22,7 @@ def main():
 
     # List the objects we've created 
     results = client.list_objects_v2(Bucket=bucket_name)["Contents"]
-    print("Objects created:")
+    print("Done! Objects created:")
     for obj in results:
         print(f"{obj['Key']} {obj['LastModified'].isoformat()}")
 
