@@ -19,8 +19,17 @@ python3 main.py 8
 
 Otherwise, it assumes the most recent 5. The scripts also take in environment variables assuming it wil run in a container. An ideal location for this script to run may be in a serverless setting.
 
+Add new items with:
+
+```
+hash=$(openssl rand -base64 8 | tr -dc A-Za-z0-9); awslocal s3api put-object --bucket s3-bucket-name --key "${hash}/index.html"; awslocal s3api put-object --bucket s3-bucket-name --key "${hash}/style.css"
+```
+
+And re-run the main.py script to see it deleting older items.
+
 ## Assumptions
 
 - This script assumes that the deployments go by the last modified date of the objects and that these objects won't be modified after they've been uploaded to S3.
+- This script also assumes that the deployment name (the hash) does not contain any symbols.
 - This script assumes that conditions are perfect and does not do any proper error handling, such as checking to see if the bucket exists or is accessible. Before a production deploy, we'd want to add more error handling.
 - This script assumes that each deployment only has a few files and does not properly paginate items. If this were in production, we'd properly want to make sure we paginate all the items in a bucket in case it exceeds the default limit that `list_objects_v2` returns.
