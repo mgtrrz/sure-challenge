@@ -18,7 +18,8 @@ def main():
         sleep(random.randrange(1, 3))
         k = uuid.uuid4().hex[:8]
         client.put_object(Bucket=BUCKET_NAME, Key=f"{k}/index.html")
-        client.put_object(Bucket=BUCKET_NAME, Key=f"{k}/style.css")
+        client.put_object(Bucket=BUCKET_NAME, Key=f"{k}/css/font.css")
+        client.put_object(Bucket=BUCKET_NAME, Key=f"{k}/images/hey.png ")
 
     # List the objects we've created 
     results = client.list_objects_v2(Bucket=BUCKET_NAME)["Contents"]

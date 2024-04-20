@@ -22,7 +22,7 @@ Otherwise, it assumes the most recent 5. The scripts also take in environment va
 If you have [awslocal installed](https://docs.localstack.cloud/user-guide/integrations/aws-cli/#localstack-aws-cli-awslocal), add new items with:
 
 ```
-hash=$(openssl rand -base64 8 | tr -dc A-Za-z0-9); awslocal s3api put-object --bucket s3-bucket-name --key "${hash}/index.html"; awslocal s3api put-object --bucket s3-bucket-name --key "${hash}/style.css"
+hash=$(openssl rand -base64 8 | tr -dc A-Za-z0-9); awslocal s3api put-object --bucket s3-bucket-name --key "${hash}/index.html"; awslocal s3api put-object --bucket s3-bucket-name --key "${hash}/css/font.css"; awslocal s3api put-object --bucket s3-bucket-name --key "${hash}/images/hey.png"
 ```
 
 Alternatively, you can re-run the init script locally `python3 init.py`.
